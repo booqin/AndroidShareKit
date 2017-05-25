@@ -1,28 +1,22 @@
 package com.xinguangnet.sharekit;
 
-import android.app.Activity;
+import android.content.Intent;
 
 /**
- * 分享接口
+ * 微博分享接口
  * Created by Boqin on 2017/5/25.
  * Modified by Boqin
  *
  * @Version
  */
-public interface ISharePerformer{
+public interface ISharePerformer {
 
     /**
-     * 微信
+     * 分享到微博
+     * @param imageShareAction
      */
-    void showToWX(Activity activity);
+    void shareTo(ImageShareAction imageShareAction);
 
-    /**
-     * 微信朋友圈
-     */
-    void showToWXCircle(Activity activity);
+    void doResultIntent(Intent intent);
 
-    /**
-     * 微博
-     */
-    void showToWB(Activity activity);
 }

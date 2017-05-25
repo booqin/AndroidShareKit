@@ -3,12 +3,15 @@ package com.xinguangnet.sharekit.impl;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
+import com.sina.weibo.sdk.share.WbShareCallback;
 import com.sina.weibo.sdk.share.WbShareHandler;
-import com.xinguangnet.sharekit.IShareWBPerformer;
+import com.xinguangnet.sharekit.ISharePerformer;
 import com.xinguangnet.sharekit.ImageShareAction;
 import com.xinguangnet.sharekit.R;
+import com.xinguangnet.sharekit.ShareCallback;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
@@ -20,28 +23,59 @@ import android.text.TextUtils;
  *
  * @Version
  */
-public class ImageShareWBPerformerImpl implements IShareWBPerformer {
+public class ImageShareWBPerformerImpl implements ISharePerformer, WbShareCallback{
 
     private Activity mActivity;
 
     private WbShareHandler mShareHandler;
 
-    public ImageShareWBPerformerImpl(Activity activity){
+    private ShareCallback mShareCallback;
+
+    public ImageShareWBPerformerImpl(Activity activity, ShareCallback shareCallback){
         mActivity = activity;
         mShareHandler = new WbShareHandler(mActivity);
         mShareHandler.registerApp();
+        mShareCallback = shareCallback;
     }
 
     @Override
-    public void shareToWB(ImageShareAction imageShareAction) {
+    public void shareTo(ImageShareAction imageShareAction) {
         WeiboMultiMessage wbMessage = new WeiboMultiMessage();
         if (imageShareAction.isShowTitle()) {
             wbMessage.textObject = getTextObj(imageShareAction.getTitle(), imageShareAction.getTitle(), "");
         }
         wbMessage.imageObject = getImageObj();
+        if (mShareCallback!=null) {
+            mShareCallback.onStart();
+        }
         mShareHandler.shareMessage(wbMessage, true);
     }
 
+    @Override
+    public void doResultIntent(Intent intent) {
+        mShareHandler.doResultIntent(intent, this);
+    }
+
+    @Override
+    public void onWbShareSuccess() {
+        if (mShareCallback!=null) {
+            mShareCallback.onShareSuccess();
+        }
+    }
+
+    @Override
+    public void onWbShareCancel() {
+        if (mShareCallback!=null) {
+            mShareCallback.onShareCancel();
+        }
+    }
+
+    @Override
+    public void onWbShareFail() {
+        if (mShareCallback!=null) {
+            mShareCallback.onShareFail();
+        }
+    }
 
     /**
      * 创建文本消息对象。

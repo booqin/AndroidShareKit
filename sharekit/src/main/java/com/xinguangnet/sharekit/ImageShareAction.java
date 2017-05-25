@@ -3,6 +3,7 @@ package com.xinguangnet.sharekit;
 import com.xinguangnet.sharekit.impl.ImageShareWBPerformerImpl;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.TextUtils;
 
 /**
@@ -11,7 +12,7 @@ import android.text.TextUtils;
  * Modified by Boqin
  * @Version
  */
-public class ImageShareAction implements ISharePerformer{
+public class ImageShareAction implements IShareAction {
 
     /** 标题 */
     private String mTitle;
@@ -22,11 +23,16 @@ public class ImageShareAction implements ISharePerformer{
     /** 缩略图 */
     private String mThumb;
 
-    private ImageShareAction(String title, String content, String image, String thumb){
+    private ShareCallback mShareCallback;
+
+    private ISharePerformer mISharePerformer;
+
+    private ImageShareAction(String title, String content, String image, String thumb, ShareCallback shareCallback){
         mTitle = title;
         mImage = image;
         mThumb = thumb;
         mContent = content;
+        mShareCallback = shareCallback;
     }
 
     public String getTitle() {
@@ -65,6 +71,14 @@ public class ImageShareAction implements ISharePerformer{
         mContent = content;
     }
 
+    public ShareCallback getShareCallback() {
+        return mShareCallback;
+    }
+
+    public void setShareCallback(ShareCallback shareCallback) {
+        mShareCallback = shareCallback;
+    }
+
     @Override
     public void showToWX(Activity activity) {
 
@@ -77,8 +91,13 @@ public class ImageShareAction implements ISharePerformer{
 
     @Override
     public void showToWB(Activity activity) {
-        IShareWBPerformer imageShareWBPerformer = new ImageShareWBPerformerImpl(activity);
-        imageShareWBPerformer.shareToWB(this);
+        mISharePerformer = new ImageShareWBPerformerImpl(activity, mShareCallback);
+        mISharePerformer.shareTo(this);
+    }
+
+    @Override
+    public void doResultIntent(Intent intent) {
+        mISharePerformer.doResultIntent(intent);
     }
 
     /**
@@ -94,6 +113,8 @@ public class ImageShareAction implements ISharePerformer{
         private String mImage;
         /** 缩略图 */
         private String mThumb;
+
+        private ShareCallback mShareCallback;
 
         public Builder(){
 
@@ -119,9 +140,14 @@ public class ImageShareAction implements ISharePerformer{
             return this;
         }
 
+        public Builder setShareCallback(ShareCallback shareCallback) {
+            mShareCallback = shareCallback;
+            return this;
+        }
 
         public ImageShareAction build(){
-            return new ImageShareAction(mTitle, mContent, mImage, mThumb);
+            return new ImageShareAction(mTitle, mContent, mImage, mThumb, mShareCallback);
         }
+
     }
 }
