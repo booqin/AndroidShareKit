@@ -1,1 +1,1 @@
-include ':app', ':sharekit'
+include ':sample', ':sharekit'

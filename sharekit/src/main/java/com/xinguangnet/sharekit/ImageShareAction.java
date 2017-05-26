@@ -1,5 +1,7 @@
 package com.xinguangnet.sharekit;
 
+import com.xinguangnet.sharekit.callback.ShareResultCallback;
+import com.xinguangnet.sharekit.callback.ShareStatusCallback;
 import com.xinguangnet.sharekit.impl.ImageShareWBPerformerImpl;
 
 import android.app.Activity;
@@ -10,6 +12,7 @@ import android.text.TextUtils;
  * 图片分享操作
  * Created by Boqin on 2017/5/24.
  * Modified by Boqin
+ *
  * @Version
  */
 public class ImageShareAction implements IShareAction {
@@ -22,17 +25,42 @@ public class ImageShareAction implements IShareAction {
     private String mImage;
     /** 缩略图 */
     private String mThumb;
+    /** 状态回调 */
+    private ShareStatusCallback mShareStatusCallback;
+    /** 结果回调 */
+    private ShareResultCallback mShareResultCallback;
+    /** 执行类 */
+    private ISharePerformer mSharePerformer;
 
-    private ShareCallback mShareCallback;
-
-    private ISharePerformer mISharePerformer;
-
-    private ImageShareAction(String title, String content, String image, String thumb, ShareCallback shareCallback){
+    private ImageShareAction(String title, String content, String image, String thumb, ShareStatusCallback shareStatusCallback,
+            ShareResultCallback shareResultCallback) {
         mTitle = title;
         mImage = image;
         mThumb = thumb;
         mContent = content;
-        mShareCallback = shareCallback;
+        mShareStatusCallback = shareStatusCallback;
+        mShareResultCallback = shareResultCallback;
+    }
+
+    @Override
+    public void showToWX(Activity activity) {
+
+    }
+
+    @Override
+    public void showToWXCircle(Activity activity) {
+
+    }
+
+    @Override
+    public void showToWB(Activity activity) {
+        mSharePerformer = new ImageShareWBPerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
+        mSharePerformer.shareTo(this);
+    }
+
+    @Override
+    public void doResultIntent(Intent intent) {
+        mSharePerformer.doResultIntent(intent);
     }
 
     public String getTitle() {
@@ -43,7 +71,7 @@ public class ImageShareAction implements IShareAction {
         mTitle = title;
     }
 
-    public boolean isShowTitle(){
+    public boolean isShowTitle() {
         return !TextUtils.isEmpty(mTitle);
     }
 
@@ -71,40 +99,24 @@ public class ImageShareAction implements IShareAction {
         mContent = content;
     }
 
-    public ShareCallback getShareCallback() {
-        return mShareCallback;
+    public ShareResultCallback getShareResultCallback() {
+        return mShareResultCallback;
     }
 
-    public void setShareCallback(ShareCallback shareCallback) {
-        mShareCallback = shareCallback;
+    public void setShareResultCallback(ShareResultCallback shareResultCallback) {
+        mShareResultCallback = shareResultCallback;
     }
 
-    @Override
-    public void showToWX(Activity activity) {
-
-    }
-
-    @Override
-    public void showToWXCircle(Activity activity) {
-
-    }
-
-    @Override
-    public void showToWB(Activity activity) {
-        mISharePerformer = new ImageShareWBPerformerImpl(activity, mShareCallback);
-        mISharePerformer.shareTo(this);
-    }
-
-    @Override
-    public void doResultIntent(Intent intent) {
-        mISharePerformer.doResultIntent(intent);
+    public void setShareStatusCallback(ShareStatusCallback shareStatusCallback) {
+        mShareStatusCallback = shareStatusCallback;
     }
 
     /**
      * 构建者
+     *
      * @description: Created by Boqin on 2017/5/25 10:37
      */
-    public static class Builder{
+    public static class Builder {
         /** 标题 */
         private String mTitle;
         /** 内容 */
@@ -114,13 +126,15 @@ public class ImageShareAction implements IShareAction {
         /** 缩略图 */
         private String mThumb;
 
-        private ShareCallback mShareCallback;
+        private ShareStatusCallback mShareStatusCallback;
 
-        public Builder(){
+        private ShareResultCallback mShareResultCallback;
+
+        public Builder() {
 
         }
 
-        public Builder setTitle(String title){
+        public Builder setTitle(String title) {
             mTitle = title;
             return this;
         }
@@ -140,14 +154,18 @@ public class ImageShareAction implements IShareAction {
             return this;
         }
 
-        public Builder setShareCallback(ShareCallback shareCallback) {
-            mShareCallback = shareCallback;
+        public Builder setShareResultCallback(ShareResultCallback shareResultCallback) {
+            mShareResultCallback = shareResultCallback;
             return this;
         }
 
-        public ImageShareAction build(){
-            return new ImageShareAction(mTitle, mContent, mImage, mThumb, mShareCallback);
+        public ImageShareAction build() {
+            return new ImageShareAction(mTitle, mContent, mImage, mThumb, mShareStatusCallback, mShareResultCallback);
         }
 
+        public Builder setShareStatusCallback(ShareStatusCallback shareStatusCallback) {
+            mShareStatusCallback = shareStatusCallback;
+            return this;
+        }
     }
 }

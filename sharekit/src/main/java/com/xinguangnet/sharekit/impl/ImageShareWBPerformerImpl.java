@@ -8,7 +8,8 @@ import com.sina.weibo.sdk.share.WbShareHandler;
 import com.xinguangnet.sharekit.ISharePerformer;
 import com.xinguangnet.sharekit.ImageShareAction;
 import com.xinguangnet.sharekit.R;
-import com.xinguangnet.sharekit.ShareCallback;
+import com.xinguangnet.sharekit.callback.ShareResultCallback;
+import com.xinguangnet.sharekit.callback.ShareStatusCallback;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +18,7 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 /**
- * TODO
+ * 图文微博分享实现类
  * Created by Boqin on 2017/5/25.
  * Modified by Boqin
  *
@@ -29,24 +30,27 @@ public class ImageShareWBPerformerImpl implements ISharePerformer, WbShareCallba
 
     private WbShareHandler mShareHandler;
 
-    private ShareCallback mShareCallback;
+    private ShareStatusCallback mShareStatusCallback;
 
-    public ImageShareWBPerformerImpl(Activity activity, ShareCallback shareCallback){
+    private ShareResultCallback mShareResultCallback;
+
+    public ImageShareWBPerformerImpl(Activity activity, ShareStatusCallback shareStatusCallback, ShareResultCallback shareResultCallback){
         mActivity = activity;
         mShareHandler = new WbShareHandler(mActivity);
         mShareHandler.registerApp();
-        mShareCallback = shareCallback;
+        mShareStatusCallback = shareStatusCallback;
+        mShareResultCallback = shareResultCallback;
     }
 
     @Override
     public void shareTo(ImageShareAction imageShareAction) {
         WeiboMultiMessage wbMessage = new WeiboMultiMessage();
         if (imageShareAction.isShowTitle()) {
-            wbMessage.textObject = getTextObj(imageShareAction.getTitle(), imageShareAction.getTitle(), "");
+            wbMessage.textObject = getTextObj(imageShareAction.getTitle(), imageShareAction.getContent(), "");
         }
         wbMessage.imageObject = getImageObj();
-        if (mShareCallback!=null) {
-            mShareCallback.onStart();
+        if (mShareStatusCallback !=null) {
+            mShareStatusCallback.onStart();
         }
         mShareHandler.shareMessage(wbMessage, true);
     }
@@ -58,22 +62,31 @@ public class ImageShareWBPerformerImpl implements ISharePerformer, WbShareCallba
 
     @Override
     public void onWbShareSuccess() {
-        if (mShareCallback!=null) {
-            mShareCallback.onShareSuccess();
+        if (mShareResultCallback !=null) {
+            mShareResultCallback.onShareSuccess();
+        }
+        if (mShareStatusCallback !=null) {
+            mShareStatusCallback.onFinish();
         }
     }
 
     @Override
     public void onWbShareCancel() {
-        if (mShareCallback!=null) {
-            mShareCallback.onShareCancel();
+        if (mShareResultCallback !=null) {
+            mShareResultCallback.onShareCancel();
+        }
+        if (mShareStatusCallback !=null) {
+            mShareStatusCallback.onFinish();
         }
     }
 
     @Override
     public void onWbShareFail() {
-        if (mShareCallback!=null) {
-            mShareCallback.onShareFail();
+        if (mShareResultCallback !=null) {
+            mShareResultCallback.onShareFail();
+        }
+        if (mShareStatusCallback !=null) {
+            mShareStatusCallback.onFinish();
         }
     }
 
