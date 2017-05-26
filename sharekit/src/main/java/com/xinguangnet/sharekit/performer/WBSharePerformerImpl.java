@@ -1,13 +1,13 @@
-package com.xinguangnet.sharekit.impl;
+package com.xinguangnet.sharekit.performer;
 
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
 import com.sina.weibo.sdk.share.WbShareCallback;
 import com.sina.weibo.sdk.share.WbShareHandler;
-import com.xinguangnet.sharekit.ISharePerformer;
-import com.xinguangnet.sharekit.ImageShareAction;
+import com.xinguangnet.sharekit.action.ImageShareAction;
 import com.xinguangnet.sharekit.R;
+import com.xinguangnet.sharekit.action.TextShareAction;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
 import com.xinguangnet.sharekit.callback.ShareStatusCallback;
 
@@ -24,7 +24,7 @@ import android.text.TextUtils;
  *
  * @Version
  */
-public class ImageShareWBPerformerImpl implements ISharePerformer, WbShareCallback{
+public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
 
     private Activity mActivity;
 
@@ -34,7 +34,7 @@ public class ImageShareWBPerformerImpl implements ISharePerformer, WbShareCallba
 
     private ShareResultCallback mShareResultCallback;
 
-    public ImageShareWBPerformerImpl(Activity activity, ShareStatusCallback shareStatusCallback, ShareResultCallback shareResultCallback){
+    public WBSharePerformerImpl(Activity activity, ShareStatusCallback shareStatusCallback, ShareResultCallback shareResultCallback){
         mActivity = activity;
         mShareHandler = new WbShareHandler(mActivity);
         mShareHandler.registerApp();
@@ -44,14 +44,24 @@ public class ImageShareWBPerformerImpl implements ISharePerformer, WbShareCallba
 
     @Override
     public void shareTo(ImageShareAction imageShareAction) {
+        if (mShareStatusCallback !=null) {
+            mShareStatusCallback.onStart();
+        }
         WeiboMultiMessage wbMessage = new WeiboMultiMessage();
         if (imageShareAction.isShowTitle()) {
             wbMessage.textObject = getTextObj(imageShareAction.getTitle(), imageShareAction.getContent(), "");
         }
         wbMessage.imageObject = getImageObj();
+        mShareHandler.shareMessage(wbMessage, true);
+    }
+
+    @Override
+    public void shareTo(TextShareAction textShareAction) {
         if (mShareStatusCallback !=null) {
             mShareStatusCallback.onStart();
         }
+        WeiboMultiMessage wbMessage = new WeiboMultiMessage();
+        wbMessage.textObject = getTextObj(textShareAction.getTitle(), textShareAction.getContent(), textShareAction.getUrl());
         mShareHandler.shareMessage(wbMessage, true);
     }
 

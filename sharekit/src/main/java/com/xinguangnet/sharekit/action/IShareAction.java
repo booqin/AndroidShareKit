@@ -1,4 +1,4 @@
-package com.xinguangnet.sharekit;
+package com.xinguangnet.sharekit.action;
 
 import android.app.Activity;
 import android.content.Intent;

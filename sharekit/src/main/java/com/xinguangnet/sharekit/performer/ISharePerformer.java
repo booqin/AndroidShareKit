@@ -1,4 +1,7 @@
-package com.xinguangnet.sharekit;
+package com.xinguangnet.sharekit.performer;
+
+import com.xinguangnet.sharekit.action.ImageShareAction;
+import com.xinguangnet.sharekit.action.TextShareAction;
 
 import android.content.Intent;
 
@@ -16,6 +19,8 @@ public interface ISharePerformer {
      * @param imageShareAction
      */
     void shareTo(ImageShareAction imageShareAction);
+
+    void shareTo(TextShareAction textShareAction);
 
     void doResultIntent(Intent intent);
 

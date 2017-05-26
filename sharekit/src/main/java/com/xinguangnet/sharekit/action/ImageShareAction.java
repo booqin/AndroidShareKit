@@ -1,11 +1,11 @@
-package com.xinguangnet.sharekit;
+package com.xinguangnet.sharekit.action;
 
+import com.xinguangnet.sharekit.performer.ISharePerformer;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
 import com.xinguangnet.sharekit.callback.ShareStatusCallback;
-import com.xinguangnet.sharekit.impl.ImageShareWBPerformerImpl;
+import com.xinguangnet.sharekit.performer.WBSharePerformerImpl;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.text.TextUtils;
 
 /**
@@ -15,7 +15,7 @@ import android.text.TextUtils;
  *
  * @Version
  */
-public class ImageShareAction implements IShareAction {
+public class ImageShareAction extends BaseShareAction {
 
     /** 标题 */
     private String mTitle;
@@ -25,21 +25,16 @@ public class ImageShareAction implements IShareAction {
     private String mImage;
     /** 缩略图 */
     private String mThumb;
-    /** 状态回调 */
-    private ShareStatusCallback mShareStatusCallback;
-    /** 结果回调 */
-    private ShareResultCallback mShareResultCallback;
     /** 执行类 */
     private ISharePerformer mSharePerformer;
 
     private ImageShareAction(String title, String content, String image, String thumb, ShareStatusCallback shareStatusCallback,
             ShareResultCallback shareResultCallback) {
+        super(shareStatusCallback, shareResultCallback);
         mTitle = title;
         mImage = image;
         mThumb = thumb;
         mContent = content;
-        mShareStatusCallback = shareStatusCallback;
-        mShareResultCallback = shareResultCallback;
     }
 
     @Override
@@ -54,13 +49,13 @@ public class ImageShareAction implements IShareAction {
 
     @Override
     public void showToWB(Activity activity) {
-        mSharePerformer = new ImageShareWBPerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
+        mSharePerformer = new WBSharePerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
         mSharePerformer.shareTo(this);
     }
 
     @Override
-    public void doResultIntent(Intent intent) {
-        mSharePerformer.doResultIntent(intent);
+    protected ISharePerformer getSharePerformer() {
+        return mSharePerformer;
     }
 
     public String getTitle() {
@@ -97,18 +92,6 @@ public class ImageShareAction implements IShareAction {
 
     public void setContent(String content) {
         mContent = content;
-    }
-
-    public ShareResultCallback getShareResultCallback() {
-        return mShareResultCallback;
-    }
-
-    public void setShareResultCallback(ShareResultCallback shareResultCallback) {
-        mShareResultCallback = shareResultCallback;
-    }
-
-    public void setShareStatusCallback(ShareStatusCallback shareStatusCallback) {
-        mShareStatusCallback = shareStatusCallback;
     }
 
     /**

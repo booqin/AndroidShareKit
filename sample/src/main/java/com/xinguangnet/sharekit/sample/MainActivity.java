@@ -3,7 +3,7 @@ package com.xinguangnet.sharekit.sample;
 import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.xinguangnet.sharekit.Constants;
-import com.xinguangnet.sharekit.ImageShareAction;
+import com.xinguangnet.sharekit.action.ImageShareAction;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
 
 import android.content.Intent;
