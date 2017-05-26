@@ -16,6 +16,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private Button mButton;
+    private Button mWXButton;
     private ImageShareAction mImageShareAction;
 
     @Override
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         WbSdk.install(this,new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
 
         mButton = (Button) findViewById(R.id.bt);
-
+        mWXButton = (Button) findViewById(R.id.bt2);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 mImageShareAction.showToWB(MainActivity.this);
+            }
+        });
+
+        mWXButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }

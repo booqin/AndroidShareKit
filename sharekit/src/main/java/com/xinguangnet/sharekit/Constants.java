@@ -41,4 +41,8 @@ public interface Constants {
                     + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
                     + "follow_app_official_microblog," + "invitation_write";
 
+    /** 当前 DEMO 应用的 APP_KEY，第三方应用应该使用自己的 APP_KEY 替换该 APP_KEY */
+    public static final String WX_APP_ID      = "985334501";
+
+
 }
