@@ -22,7 +22,8 @@ public abstract class BaseShareAction implements IShareAction{
 
     protected BaseShareAction(ShareStatusCallback shareStatusCallback,
             ShareResultCallback shareResultCallback){
-
+        mShareStatusCallback = shareStatusCallback;
+        mShareResultCallback = shareResultCallback;
     }
 
     @Override
