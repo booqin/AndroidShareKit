@@ -25,30 +25,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        WbSdk.install(this,new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
+        mImageShareAction = new ImageShareAction.Builder().setTitle("123").setContent("内容").setImage("").build();
+        mImageShareAction.setShareResultCallback(new ShareResultCallback() {
+            @Override
+            public void onShareSuccess() {
+                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onShareFail() {
+                Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onShareCancel() {
+                Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mButton = (Button) findViewById(R.id.bt);
         mWXButton = (Button) findViewById(R.id.bt2);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mImageShareAction = new ImageShareAction.Builder().setTitle("123").setContent("内容").setImage("").build();
-                mImageShareAction.setShareResultCallback(new ShareResultCallback() {
-                    @Override
-                    public void onShareSuccess() {
-                        Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onShareFail() {
-                        Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onShareCancel() {
-                        Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
-                    }
-                });
                 mImageShareAction.showToWB(MainActivity.this);
             }
         });

@@ -49,9 +49,9 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
         }
         WeiboMultiMessage wbMessage = new WeiboMultiMessage();
         if (imageShareAction.isShowTitle()) {
-            wbMessage.textObject = getTextObj(imageShareAction.getTitle(), imageShareAction.getContent(), "");
+            wbMessage.textObject = getTextObj(imageShareAction.getTitle(), imageShareAction.getContent(), imageShareAction.getUrl());
         }
-        wbMessage.imageObject = getImageObj();
+        wbMessage.imageObject = getImageObj(imageShareAction.getBitmap());
         mShareHandler.shareMessage(wbMessage, true);
     }
 
@@ -123,9 +123,9 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
      * 创建图片消息对象。
      * @return 图片消息对象。
      */
-    private ImageObject getImageObj() {
+    private ImageObject getImageObj(Bitmap bitmap) {
         ImageObject imageObject = new ImageObject();
-        Bitmap bitmap = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.test);
+//        Bitmap bitmap = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.test);
         imageObject.setImageObject(bitmap);
         return imageObject;
     }

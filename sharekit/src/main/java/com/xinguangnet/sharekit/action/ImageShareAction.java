@@ -6,6 +6,9 @@ import com.xinguangnet.sharekit.callback.ShareStatusCallback;
 import com.xinguangnet.sharekit.performer.WBSharePerformerImpl;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 
 /**
@@ -17,18 +20,31 @@ import android.text.TextUtils;
  */
 public class ImageShareAction extends BaseShareAction {
 
+
+//    "imageurl");//网络图片
+//    file);//本地文件
+//    R.drawable.xxx);//资源文件
+//    bitmap);//bitmap文件
+//    byte[]);//字节流
     /** 标题 */
     private String mTitle;
     /** 内容 */
     private String mContent;
+    /** 链接 */
+    private String mUrl;
     /** 图片 */
     private String mImage;
+    /** 图片 */
+    private int mDrawable;
     /** 缩略图 */
     private String mThumb;
+
+    private Bitmap mBitmap;
+
     /** 执行类 */
     private ISharePerformer mSharePerformer;
 
-    private ImageShareAction(String title, String content, String image, String thumb, ShareStatusCallback shareStatusCallback,
+    private ImageShareAction(String title, String content, String url, String image, String thumb, ShareStatusCallback shareStatusCallback,
             ShareResultCallback shareResultCallback) {
         super(shareStatusCallback, shareResultCallback);
         mTitle = title;
@@ -49,6 +65,7 @@ public class ImageShareAction extends BaseShareAction {
 
     @Override
     public void showToWB(Activity activity) {
+        mBitmap = BitmapFactory.decodeResource(activity.getResources(), mDrawable);
         mSharePerformer = new WBSharePerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
         mSharePerformer.shareTo(this);
     }
@@ -94,6 +111,26 @@ public class ImageShareAction extends BaseShareAction {
         mContent = content;
     }
 
+    public String getUrl() {
+        return mUrl;
+    }
+
+    public void setUrl(String url) {
+        mUrl = url;
+    }
+
+    public int getResImage() {
+        return mDrawable;
+    }
+
+    public void setResImage(@DrawableRes int drawable) {
+        mDrawable = drawable;
+    }
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
     /**
      * 构建者
      *
@@ -104,6 +141,8 @@ public class ImageShareAction extends BaseShareAction {
         private String mTitle;
         /** 内容 */
         private String mContent;
+        /** 链接 */
+        private String mUrl;
         /** 图片 */
         private String mImage;
         /** 缩略图 */
@@ -143,11 +182,16 @@ public class ImageShareAction extends BaseShareAction {
         }
 
         public ImageShareAction build() {
-            return new ImageShareAction(mTitle, mContent, mImage, mThumb, mShareStatusCallback, mShareResultCallback);
+            return new ImageShareAction(mTitle, mContent, mUrl, mImage, mThumb, mShareStatusCallback, mShareResultCallback);
         }
 
         public Builder setShareStatusCallback(ShareStatusCallback shareStatusCallback) {
             mShareStatusCallback = shareStatusCallback;
+            return this;
+        }
+
+        public Builder setUrl(String url) {
+            mUrl = url;
             return this;
         }
     }
