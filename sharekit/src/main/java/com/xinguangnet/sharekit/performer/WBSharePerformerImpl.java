@@ -6,7 +6,6 @@ import com.sina.weibo.sdk.api.WeiboMultiMessage;
 import com.sina.weibo.sdk.share.WbShareCallback;
 import com.sina.weibo.sdk.share.WbShareHandler;
 import com.xinguangnet.sharekit.action.ImageShareAction;
-import com.xinguangnet.sharekit.R;
 import com.xinguangnet.sharekit.action.TextShareAction;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
 import com.xinguangnet.sharekit.callback.ShareStatusCallback;
@@ -14,7 +13,6 @@ import com.xinguangnet.sharekit.callback.ShareStatusCallback;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 /**
@@ -106,13 +104,13 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
      */
     private TextObject getTextObj(String title, String content, String url) {
         TextObject textObject = new TextObject();
-        if (TextUtils.isEmpty(title)) {
+        if (!TextUtils.isEmpty(title)) {
             textObject.title = title;
         }
-        if (TextUtils.isEmpty(content)) {
+        if (!TextUtils.isEmpty(content)) {
             textObject.text = content;
         }
-        if (TextUtils.isEmpty(url)) {
+        if (!TextUtils.isEmpty(url)) {
             textObject.actionUrl = url;
         }
         return textObject;
@@ -125,7 +123,6 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
      */
     private ImageObject getImageObj(Bitmap bitmap) {
         ImageObject imageObject = new ImageObject();
-//        Bitmap bitmap = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.test);
         imageObject.setImageObject(bitmap);
         return imageObject;
     }

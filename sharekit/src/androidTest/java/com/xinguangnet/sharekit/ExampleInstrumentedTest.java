@@ -23,4 +23,5 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.xinguangnet.sharekit.test", appContext.getPackageName());
     }
+
 }
