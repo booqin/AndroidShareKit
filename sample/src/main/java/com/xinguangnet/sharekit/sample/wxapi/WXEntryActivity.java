@@ -1,9 +1,8 @@
-package com.xinguangnet.sharekit.wxapi;
+package com.xinguangnet.sharekit.sample.wxapi;
 
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.xinguangnet.sharekit.Constants;
 import com.xinguangnet.sharekit.ShareKit;
 
 import android.app.Activity;
@@ -26,6 +25,7 @@ public class WXEntryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		mWxApi = WXAPIFactory.createWXAPI(this, ShareKit.WX_APP_ID, false);
 		Log.d("BQ", "onCreate");
+		finish();
 //		mWxApi.handleIntent(getIntent(), mEventHandler);
 	}
 

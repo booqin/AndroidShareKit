@@ -1,7 +1,7 @@
 package com.xinguangnet.sharekit;
 
 /**
- * TODO
+ * 常量
  * Created by Boqin on 2017/5/25.
  * Modified by Boqin
  *

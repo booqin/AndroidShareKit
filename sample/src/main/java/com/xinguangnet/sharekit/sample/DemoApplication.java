@@ -16,6 +16,6 @@ public class DemoApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        ShareKit.initialize(this, "985334501", null);
+        ShareKit.initialize(this, "985334501", "wx9334c56d5055ec87");
     }
 }

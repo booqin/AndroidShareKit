@@ -4,6 +4,7 @@ import com.xinguangnet.sharekit.performer.ISharePerformer;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
 import com.xinguangnet.sharekit.callback.ShareStatusCallback;
 import com.xinguangnet.sharekit.performer.WBSharePerformerImpl;
+import com.xinguangnet.sharekit.performer.WXSessionSharePerformerImpl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -55,7 +56,8 @@ public class ImageShareAction extends BaseShareAction {
 
     @Override
     public void showToWX(Activity activity) {
-
+        mSharePerformer = new WXSessionSharePerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
+        mSharePerformer.shareTo(this);
     }
 
     @Override

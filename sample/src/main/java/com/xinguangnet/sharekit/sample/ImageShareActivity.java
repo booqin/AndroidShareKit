@@ -65,7 +65,7 @@ public class ImageShareActivity extends AppCompatActivity{
         mWXButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mImageShareAction.showToWX(ImageShareActivity.this);
             }
         });
 

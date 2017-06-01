@@ -30,7 +30,7 @@ public class TextShareActivity extends AppCompatActivity{
             @Nullable
                     Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_share);
+        setContentView(R.layout.activity_text_share);
 
         mTextShareAction = new TextShareAction.Builder().setTitle("123").setContent("内容").build();
         mTextShareAction.setShareResultCallback(new ShareResultCallback() {
@@ -62,7 +62,7 @@ public class TextShareActivity extends AppCompatActivity{
         mWXButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mTextShareAction.showToWX(TextShareActivity.this);
             }
         });
 
