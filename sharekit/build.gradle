@@ -30,4 +30,6 @@ dependencies {
     compile 'com.sina.weibo.sdk:core:2.0.3:openDefaultRelease@aar'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     testCompile 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }

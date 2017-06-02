@@ -1,8 +1,8 @@
 package com.xinguangnet.sharekit.action;
 
-import com.xinguangnet.sharekit.performer.ISharePerformer;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
 import com.xinguangnet.sharekit.callback.ShareStatusCallback;
+import com.xinguangnet.sharekit.performer.ISharePerformer;
 
 import android.content.Intent;
 

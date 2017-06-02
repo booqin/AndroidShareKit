@@ -36,7 +36,7 @@ public class TextShareAction extends BaseShareAction {
 
     @Override
     public void showToWX(Activity activity) {
-        mSharePerformer = new WXSessionSharePerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
+        mSharePerformer = WXSessionSharePerformerImpl.getInstance(mShareStatusCallback, mShareResultCallback);
         mSharePerformer.shareTo(this);
     }
 

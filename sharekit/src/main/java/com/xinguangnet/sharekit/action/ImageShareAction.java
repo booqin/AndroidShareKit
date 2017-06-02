@@ -8,8 +8,6 @@ import com.xinguangnet.sharekit.performer.WXSessionSharePerformerImpl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 
 /**
@@ -21,42 +19,29 @@ import android.text.TextUtils;
  */
 public class ImageShareAction extends BaseShareAction {
 
-
-//    "imageurl");//网络图片
-//    file);//本地文件
-//    R.drawable.xxx);//资源文件
-//    bitmap);//bitmap文件
-//    byte[]);//字节流
     /** 标题 */
     private String mTitle;
     /** 内容 */
     private String mContent;
     /** 链接 */
     private String mUrl;
-//    /** 图片 */
-//    private String mImage;
-//    /** 图片 */
-//    private int mDrawable;
-    /** 缩略图 */
-    private String mThumb;
 
     private Bitmap mBitmap;
 
     /** 执行类 */
     private ISharePerformer mSharePerformer;
 
-    private ImageShareAction(String title, String content, String url, Bitmap bitmap, String thumb, ShareStatusCallback shareStatusCallback,
+    private ImageShareAction(String title, String content, String url, Bitmap bitmap, ShareStatusCallback shareStatusCallback,
             ShareResultCallback shareResultCallback) {
         super(shareStatusCallback, shareResultCallback);
         mTitle = title;
-        mThumb = thumb;
         mBitmap = bitmap;
         mContent = content;
     }
 
     @Override
     public void showToWX(Activity activity) {
-        mSharePerformer = new WXSessionSharePerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
+        mSharePerformer = WXSessionSharePerformerImpl.getInstance(mShareStatusCallback, mShareResultCallback);
         mSharePerformer.shareTo(this);
     }
 
@@ -87,14 +72,6 @@ public class ImageShareAction extends BaseShareAction {
 
     public boolean isShowTitle() {
         return !TextUtils.isEmpty(mTitle);
-    }
-
-    public String getThumb() {
-        return mThumb;
-    }
-
-    public void setThumb(String thumb) {
-        mThumb = thumb;
     }
 
     public String getContent() {
@@ -133,8 +110,6 @@ public class ImageShareAction extends BaseShareAction {
         private String mContent;
         /** 链接 */
         private String mUrl;
-        /** 缩略图 */
-        private String mThumb;
 
         private Bitmap mBitmap;
 
@@ -151,11 +126,6 @@ public class ImageShareAction extends BaseShareAction {
             return this;
         }
 
-        public Builder setThumb(String thumb) {
-            mThumb = thumb;
-            return this;
-        }
-
         public Builder setContent(String content) {
             mContent = content;
             return this;
@@ -167,7 +137,7 @@ public class ImageShareAction extends BaseShareAction {
         }
 
         public ImageShareAction build() {
-            return new ImageShareAction(mTitle, mContent, mUrl, mBitmap, mThumb, mShareStatusCallback, mShareResultCallback);
+            return new ImageShareAction(mTitle, mContent, mUrl, mBitmap, mShareStatusCallback, mShareResultCallback);
         }
 
         public Builder setShareStatusCallback(ShareStatusCallback shareStatusCallback) {
@@ -184,5 +154,6 @@ public class ImageShareAction extends BaseShareAction {
             mBitmap = bitmap;
             return this;
         }
+
     }
 }

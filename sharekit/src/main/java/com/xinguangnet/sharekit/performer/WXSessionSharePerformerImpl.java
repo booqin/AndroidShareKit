@@ -10,16 +10,12 @@ import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.xinguangnet.sharekit.Constants;
 import com.xinguangnet.sharekit.ShareKit;
 import com.xinguangnet.sharekit.action.ImageShareAction;
 import com.xinguangnet.sharekit.action.TextShareAction;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
 import com.xinguangnet.sharekit.callback.ShareStatusCallback;
-import com.xinguangnet.sharekit.wxapi.WXEntryActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 
@@ -40,14 +36,27 @@ public class WXSessionSharePerformerImpl implements ISharePerformer, IWXAPIEvent
 
     private ShareResultCallback mShareResultCallback;
 
+    private static WXSessionSharePerformerImpl mWXSessionSharePerformer;
 
-    public WXSessionSharePerformerImpl(Activity activity, ShareStatusCallback shareStatusCallback, ShareResultCallback shareResultCallback) {
+    private WXSessionSharePerformerImpl(ShareStatusCallback shareStatusCallback, ShareResultCallback shareResultCallback) {
 //        api = WXAPIFactory.createWXAPI(activity, ShareKit.WX_APP_ID);
 //        api.registerApp(ShareKit.WX_APP_ID);
         api = ShareKit.api;
         mShareStatusCallback = shareStatusCallback;
         mShareResultCallback = shareResultCallback;
-        WXEntryActivity.setEventHandler(this);
+    }
+
+    public static WXSessionSharePerformerImpl getInstance(ShareStatusCallback shareStatusCallback, ShareResultCallback shareResultCallback){
+        if (mWXSessionSharePerformer==null) {
+            mWXSessionSharePerformer = new WXSessionSharePerformerImpl(shareStatusCallback, shareResultCallback);
+        }
+        return mWXSessionSharePerformer;
+    }
+    /**
+     * 用于回调
+     */
+    public static WXSessionSharePerformerImpl getInstance(){
+        return mWXSessionSharePerformer;
     }
 
     @Override
