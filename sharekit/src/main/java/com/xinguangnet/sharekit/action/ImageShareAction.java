@@ -5,9 +5,11 @@ import com.xinguangnet.sharekit.callback.ShareResultCallback;
 import com.xinguangnet.sharekit.callback.ShareStatusCallback;
 import com.xinguangnet.sharekit.performer.WBSharePerformerImpl;
 import com.xinguangnet.sharekit.performer.WXSessionSharePerformerImpl;
+import com.xinguangnet.sharekit.utils.ImageUtil;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 
 /**
@@ -26,21 +28,30 @@ public class ImageShareAction extends BaseShareAction {
     /** 链接 */
     private String mUrl;
 
+    private Uri mUri;
+
     private Bitmap mBitmap;
 
     /** 执行类 */
     private ISharePerformer mSharePerformer;
 
-    private ImageShareAction(String title, String content, String url, Bitmap bitmap, ShareStatusCallback shareStatusCallback,
+    private ImageShareAction(String title, String content, String url, Uri uri, Bitmap bitmap, ShareStatusCallback shareStatusCallback,
             ShareResultCallback shareResultCallback) {
         super(shareStatusCallback, shareResultCallback);
         mTitle = title;
         mBitmap = bitmap;
         mContent = content;
+        mUri = uri;
     }
 
     @Override
     public void showToWX(Activity activity) {
+        if (mShareStatusCallback!=null) {
+            mShareStatusCallback.onStart();
+        }
+        if (mBitmap==null) {
+            mBitmap = ImageUtil.uriToBMP(activity, mUri);
+        }
         mSharePerformer = WXSessionSharePerformerImpl.getInstance(mShareStatusCallback, mShareResultCallback);
         mSharePerformer.shareTo(this);
     }
@@ -52,7 +63,12 @@ public class ImageShareAction extends BaseShareAction {
 
     @Override
     public void showToWB(Activity activity) {
-//        mBitmap = BitmapFactory.decodeResource(activity.getResources(), mDrawable);
+        if (mShareStatusCallback!=null) {
+            mShareStatusCallback.onStart();
+        }
+        if (mBitmap==null) {
+            mBitmap = ImageUtil.uriToBMP(activity, mUri);
+        }
         mSharePerformer = new WBSharePerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
         mSharePerformer.shareTo(this);
     }
@@ -104,6 +120,12 @@ public class ImageShareAction extends BaseShareAction {
      * @description: Created by Boqin on 2017/5/25 10:37
      */
     public static class Builder {
+
+        //    "imageurl");//网络图片
+        //    file);//本地文件
+        //    R.drawable.xxx);//资源文件
+        //    bitmap);//bitmap文件
+        //    byte[]);//字节流
         /** 标题 */
         private String mTitle;
         /** 内容 */
@@ -112,6 +134,11 @@ public class ImageShareAction extends BaseShareAction {
         private String mUrl;
 
         private Bitmap mBitmap;
+
+        private Uri mUri;
+//        private String mImageFile;
+//        private String mImageUrl;
+//        private int mImageRes;
 
         private ShareStatusCallback mShareStatusCallback;
 
@@ -137,7 +164,7 @@ public class ImageShareAction extends BaseShareAction {
         }
 
         public ImageShareAction build() {
-            return new ImageShareAction(mTitle, mContent, mUrl, mBitmap, mShareStatusCallback, mShareResultCallback);
+            return new ImageShareAction(mTitle, mContent, mUrl, mUri, mBitmap, mShareStatusCallback, mShareResultCallback);
         }
 
         public Builder setShareStatusCallback(ShareStatusCallback shareStatusCallback) {
@@ -155,5 +182,20 @@ public class ImageShareAction extends BaseShareAction {
             return this;
         }
 
+        public Builder setImageFile(String imageFilePath) {
+//            mImageFile = imageFilePath;
+            mUri = ImageUtil.setUri(ImageUtil.SCHEME.FILE, imageFilePath);
+            return this;
+        }
+
+        public Builder setImageUrl(String imageUrl) {
+//            mImageUrl = imageUrl;
+            return this;
+        }
+
+        public Builder setImageRes(int imageRes) {
+            mUri = ImageUtil.setUri(ImageUtil.SCHEME.RES, ""+imageRes);
+            return this;
+        }
     }
 }

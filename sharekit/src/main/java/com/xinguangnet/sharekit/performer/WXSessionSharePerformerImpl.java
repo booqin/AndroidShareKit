@@ -15,6 +15,7 @@ import com.xinguangnet.sharekit.action.ImageShareAction;
 import com.xinguangnet.sharekit.action.TextShareAction;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
 import com.xinguangnet.sharekit.callback.ShareStatusCallback;
+import com.xinguangnet.sharekit.utils.ImageUtil;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -62,18 +63,12 @@ public class WXSessionSharePerformerImpl implements ISharePerformer, IWXAPIEvent
     @Override
     public void shareTo(ImageShareAction imageShareAction) {
         SendMessageToWX.Req req = getBitmapToWX(imageShareAction);
-        if (mShareStatusCallback!=null) {
-            mShareStatusCallback.onStart();
-        }
         api.sendReq(req);
     }
 
     @Override
     public void shareTo(TextShareAction textShareAction) {
         SendMessageToWX.Req req = getMessageToWX(textShareAction);
-        if (mShareStatusCallback!=null) {
-            mShareStatusCallback.onStart();
-        }
         api.sendReq(req);
     }
 
@@ -146,7 +141,7 @@ public class WXSessionSharePerformerImpl implements ISharePerformer, IWXAPIEvent
 
         Bitmap thumbmp = Bitmap.createScaledBitmap(imageShareAction.getBitmap(), THUMB_SIZE, THUMB_SIZE, true);
 
-        wxMediaMessage.thumbData = bmpToByteArray(thumbmp, true);
+        wxMediaMessage.thumbData = ImageUtil.bmpToByteArray(thumbmp, true);
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("img");
@@ -162,20 +157,5 @@ public class WXSessionSharePerformerImpl implements ISharePerformer, IWXAPIEvent
 
 
 
-    public byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, output);
-        if (needRecycle) {
-            bmp.recycle();
-        }
 
-        byte[] result = output.toByteArray();
-        try {
-            output.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
 }

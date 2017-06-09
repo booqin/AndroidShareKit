@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 /**
- * TODO
+ * 图文分享Demo界面
  * Created by Boqin on 2017/6/1.
  * Modified by Boqin
  *
