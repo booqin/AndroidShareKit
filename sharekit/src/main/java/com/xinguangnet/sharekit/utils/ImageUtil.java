@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.text.TextUtils;
 
 /**
  * TODO
@@ -43,14 +44,21 @@ public class ImageUtil {
         }
         try {
             if (uri.getScheme().equals(SCHEME.RES)) {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), Integer.valueOf(uri.getPath()));
+                bitmap = BitmapFactory.decodeResource(context.getResources(), Integer.valueOf(getPathWithoutSlash(uri)));
             }else if (uri.getScheme().equals(SCHEME.FILE)){
-                bitmap = BitmapFactory.decodeFile(uri.getPath());
+                bitmap = BitmapFactory.decodeFile(getPathWithoutSlash(uri));
             }
         }catch (Exception e){
 
         }
         return bitmap;
+    }
+
+    public static String getPathWithoutSlash(Uri uri){
+        if (!TextUtils.isEmpty(uri.getPath())) {
+            return uri.getPath().substring(1);
+        }
+        return "";
     }
 
     public static Uri setUri(String scheme, String path){

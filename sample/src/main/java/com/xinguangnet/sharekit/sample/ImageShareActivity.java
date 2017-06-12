@@ -2,10 +2,10 @@ package com.xinguangnet.sharekit.sample;
 
 import com.xinguangnet.sharekit.action.ImageShareAction;
 import com.xinguangnet.sharekit.callback.ShareResultCallback;
+import com.xinguangnet.sharekit.callback.ShareStatusCallback;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +25,7 @@ public class ImageShareActivity extends AppCompatActivity{
     private Button mWBButton;
     private Button mWXButton;
     private ImageShareAction mImageShareAction;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(
@@ -33,9 +34,7 @@ public class ImageShareActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_share);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
-
-        mImageShareAction = new ImageShareAction.Builder().setTitle("123").setContent("内容").setBitmap(bitmap).build();
+        mImageShareAction = new ImageShareAction.Builder().setTitle("123").setContent("内容").setImageRes(R.drawable.test).build();
         mImageShareAction.setShareResultCallback(new ShareResultCallback() {
             @Override
             public void onShareSuccess() {
@@ -50,6 +49,21 @@ public class ImageShareActivity extends AppCompatActivity{
             @Override
             public void onShareCancel() {
                 Toast.makeText(ImageShareActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mImageShareAction.setShareStatusCallback(new ShareStatusCallback() {
+            @Override
+            public void onStart() {
+                mProgressDialog = new ProgressDialog(ImageShareActivity.this);
+                mProgressDialog.show();
+            }
+
+            @Override
+            public void onFinish() {
+                if (mProgressDialog!=null) {
+                    mProgressDialog.cancel();
+                }
             }
         });
 
@@ -68,9 +82,13 @@ public class ImageShareActivity extends AppCompatActivity{
                 mImageShareAction.showToWX(ImageShareActivity.this);
             }
         });
-
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mImageShareAction.onDestroy();
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

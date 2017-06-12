@@ -27,5 +27,14 @@ public interface IShareAction {
      */
     void showToWB(Activity activity);
 
+    /**
+     * 结果的回掉
+     */
     void doResultIntent(Intent intent);
+
+    /**
+     * 销毁，释放资源
+     */
+    void onDestroy();
+
 }

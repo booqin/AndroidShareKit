@@ -42,9 +42,6 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
 
     @Override
     public void shareTo(ImageShareAction imageShareAction) {
-        if (mShareStatusCallback !=null) {
-            mShareStatusCallback.onStart();
-        }
         WeiboMultiMessage wbMessage = new WeiboMultiMessage();
         if (imageShareAction.isShowTitle()) {
             wbMessage.textObject = getTextObj(imageShareAction.getTitle(), imageShareAction.getContent(), imageShareAction.getUrl());
@@ -55,9 +52,6 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
 
     @Override
     public void shareTo(TextShareAction textShareAction) {
-        if (mShareStatusCallback !=null) {
-            mShareStatusCallback.onStart();
-        }
         WeiboMultiMessage wbMessage = new WeiboMultiMessage();
         wbMessage.textObject = getTextObj(textShareAction.getTitle(), textShareAction.getContent(), textShareAction.getUrl());
         mShareHandler.shareMessage(wbMessage, true);
@@ -65,6 +59,9 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
 
     @Override
     public void doResultIntent(Intent intent) {
+        if (mShareStatusCallback !=null) {
+            mShareStatusCallback.onFinish();
+        }
         mShareHandler.doResultIntent(intent, this);
     }
 
@@ -73,9 +70,6 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
         if (mShareResultCallback !=null) {
             mShareResultCallback.onShareSuccess();
         }
-        if (mShareStatusCallback !=null) {
-            mShareStatusCallback.onFinish();
-        }
     }
 
     @Override
@@ -83,18 +77,12 @@ public class WBSharePerformerImpl implements ISharePerformer, WbShareCallback{
         if (mShareResultCallback !=null) {
             mShareResultCallback.onShareCancel();
         }
-        if (mShareStatusCallback !=null) {
-            mShareStatusCallback.onFinish();
-        }
     }
 
     @Override
     public void onWbShareFail() {
         if (mShareResultCallback !=null) {
             mShareResultCallback.onShareFail();
-        }
-        if (mShareStatusCallback !=null) {
-            mShareStatusCallback.onFinish();
         }
     }
 

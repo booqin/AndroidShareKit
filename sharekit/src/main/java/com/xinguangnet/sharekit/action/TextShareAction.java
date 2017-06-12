@@ -52,6 +52,11 @@ public class TextShareAction extends BaseShareAction {
     }
 
     @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
     protected ISharePerformer getSharePerformer() {
         return mSharePerformer;
     }

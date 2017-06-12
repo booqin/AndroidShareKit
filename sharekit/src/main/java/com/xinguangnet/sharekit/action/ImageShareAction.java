@@ -10,6 +10,7 @@ import com.xinguangnet.sharekit.utils.ImageUtil;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 
 /**
@@ -53,7 +54,7 @@ public class ImageShareAction extends BaseShareAction {
             mBitmap = ImageUtil.uriToBMP(activity, mUri);
         }
         mSharePerformer = WXSessionSharePerformerImpl.getInstance(mShareStatusCallback, mShareResultCallback);
-        mSharePerformer.shareTo(this);
+
     }
 
     @Override
@@ -71,6 +72,14 @@ public class ImageShareAction extends BaseShareAction {
         }
         mSharePerformer = new WBSharePerformerImpl(activity, mShareStatusCallback, mShareResultCallback);
         mSharePerformer.shareTo(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mBitmap!=null) {
+            mBitmap.recycle();
+            mBitmap = null;
+        }
     }
 
     @Override
@@ -193,7 +202,7 @@ public class ImageShareAction extends BaseShareAction {
             return this;
         }
 
-        public Builder setImageRes(int imageRes) {
+        public Builder setImageRes(@DrawableRes int imageRes) {
             mUri = ImageUtil.setUri(ImageUtil.SCHEME.RES, ""+imageRes);
             return this;
         }
